@@ -573,8 +573,10 @@ int ksjsoncodecobjc_i_encodeObject(KSJSONCodec* codec,
     KSJSONCodec* codec = [self codecWithEncodeOptions:0
                                         decodeOptions:decodeOptions];
     size_t errorOffset;
-    int result = ksjson_decode([JSONData bytes],
-                               [JSONData length],
+	const char *json = [[[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding] UTF8String];
+	size_t json_len = strlen(json);
+	int result = ksjson_decode(json,
+                               json_len,
                                codec.callbacks,
                                (as_bridge void*)codec, &errorOffset);
     if(result != KSJSON_OK && codec.error == nil)
